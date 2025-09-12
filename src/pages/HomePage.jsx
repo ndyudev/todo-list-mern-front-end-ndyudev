@@ -1,38 +1,54 @@
-import AddTask from "@/components/ui/AddTask";
-import DateTimeFilter from "@/components/ui/DateTimeFilter";
-import Footer from "@/components/ui/Footer";
-import Header from "@/components/ui/Header";
-import StatsAndFilters from "@/components/ui/StatsAndFilters";
-import TaskList from "@/components/ui/TaskList";
-import TaskListPagination from "@/components/ui/TaskListPagination";
+import AddTask from "@/components/AddTask";
+import DateTimeFilter from "@/components/DateTimeFilter";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+
+import StatsAndFilters from "@/components/StatsAndFilters";
+import TaskList from "@/components/TaskList";
+import TaskListPagination from "@/components/TaskListPagination";
 import React from "react";
 
 const HomePage = () => {
   return (
-    <div className="container pt-8 mx-auto">
-      <div className="w-full max-w-2xl -6 mx-auto space-y-6"></div>
-      {/* Đầu trang */}
-      <Header />
+    <div className="min-h-screen w-full relative">
+      {/* Aurora Dream Corner Whispers */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: `
+        radial-gradient(ellipse 85% 65% at 8% 8%, rgba(175, 109, 255, 0.42), transparent 60%),
+            radial-gradient(ellipse 75% 60% at 75% 35%, rgba(255, 235, 170, 0.55), transparent 62%),
+            radial-gradient(ellipse 70% 60% at 15% 80%, rgba(255, 100, 180, 0.40), transparent 62%),
+            radial-gradient(ellipse 70% 60% at 92% 92%, rgba(120, 190, 255, 0.45), transparent 62%),
+            linear-gradient(180deg, #f7eaff 0%, #fde2ea 100%)
+      `,
+        }}
+      />
+      {/* Your content goes here */}
+      <div className="container pt-8 mx-auto relative z-10">
+        <div className="w-full max-w-3xl mx-auto space-y-6">
+          {/* Đầu trang */}
+          <Header/>
 
-      {/* Tạo nhiệm vụ */}
-      <AddTask/>
+          {/* Tạo nhiệm vụ */}
+          <AddTask />
 
-      {/* Thống kê và Bộ Lọc*/}
-      <StatsAndFilters/>
+          {/* Thống kê và Bộ Lọc*/}
+          <StatsAndFilters />
 
-      {/* Danh sách nhiệm vụ */}
-      <TaskList/>
+          {/* Danh sách nhiệm vụ */}
+          <TaskList />
 
-      {/* Phân trang và lọc theo ngày */}
+          {/* Phân trang và lọc theo ngày */}
+          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+            <TaskListPagination />
+            <DateTimeFilter />
+          </div>
 
-      <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-        <TaskListPagination/>
-        <DateTimeFilter/>
+          {/* Chân trang */}
+          <Footer />
+        </div>
       </div>
-
-      {/* Chân trang */}
-
-      <Footer/>
     </div>
   );
 };
