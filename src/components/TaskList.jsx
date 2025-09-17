@@ -2,25 +2,7 @@ import React from "react";
 import TaskEmtyState from "./TaskEmtyState";
 import TaskCard from "./TaskCard";
 
-function TaskList() {
-  let filter = "all";
-
-  const filteredTasks = [
-    {
-      _id: "1",
-      title: "học react",
-      status: "active",
-      completedAt: null,
-      createdAt: new Date(),
-    },
-    {
-      _id: "2",
-      title: "học express js",
-      status: "complete",
-      completedAt: new Date(),
-      createdAt: new Date(),
-    },
-  ];
+const TaskList = ({ filteredTasks, filter }) => {
 
   if (!filteredTasks || filteredTasks.length === 0) {
     return <TaskEmtyState filter={filter} />;
