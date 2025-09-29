@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,18 +10,17 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { options } from "@/lib/data";
 
-function DateTimeFilter() {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+const DateTimeFilter = ({ dateQuery, setDateQuery }) => {
+  const [open, setOpen] = React.useState(false);
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={setOpen}
+    >
       <PopoverTrigger asChild>
         <Button
           size="lg"
@@ -30,7 +29,9 @@ function DateTimeFilter() {
           aria-expanded={open}
           className=""
         >
-          Hôm nay
+          {dateQuery
+            ? options.find((option) => option.value === dateQuery)?.label
+            : options[0].label}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -43,7 +44,7 @@ function DateTimeFilter() {
                   key={option.value}
                   value={option.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    setDateQuery(currentValue);
                     setOpen(false);
                   }}
                 >
@@ -51,7 +52,7 @@ function DateTimeFilter() {
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === option.value ? "opacity-100" : "opacity-0"
+                      dateQuery === option.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
@@ -62,6 +63,6 @@ function DateTimeFilter() {
       </PopoverContent>
     </Popover>
   );
-}
+};
 
 export default DateTimeFilter;

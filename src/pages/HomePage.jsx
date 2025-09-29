@@ -8,20 +8,29 @@ import TaskListPagination from "@/components/TaskListPagination";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import api from "@/lib/axios";
+import { visibleTaskLimit } from "@/lib/data";
 
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
   const [activeTaskCount, setActiveTaskCount] = useState(0);
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
   const [filter, setFilter] = useState("all");
+  const [dateQuery, setDateQuery] = useState("today");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [dateQuery]);
+
+
+  useEffect(() => {
+    setPage(1);
+  }, [filter, dateQuery]);
+
   // Logic lấy dữ liệu
   const fetchTasks = async () => {
     try {
-      const res = await api.get("/tasks");
+      const res = await api.get(`/tasks?filter=${dateQuery}`);
       // const data = Array.isArray(res.data) ? res.data : [];
       setTaskBuffer(res.data.tasks);
       setActiveTaskCount(res.data.activeCount);
@@ -37,6 +46,21 @@ const HomePage = () => {
     fetchTasks();
   };
 
+  const handleNext = () => {
+    setPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePrev = () => {
+    setPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage((prev) => {
+      const next = Number(newPage) || prev;
+      return Math.min(Math.max(1, next), totalPages);
+    });
+  };
+
   // Biến lưu danh sách đã lọc
   const filterTasks = taskBuffer.filter((task) => {
     switch (filter) {
@@ -48,6 +72,23 @@ const HomePage = () => {
         return true;
     }
   });
+
+  // Tính tổng trang trước, bảo đảm tối thiểu 1
+  const totalPages = Math.max(1, Math.ceil(filterTasks.length / visibleTaskLimit));
+
+  // Kẹp page về phạm vi hợp lệ khi dữ liệu thay đổi (tránh setState trong render)
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    } else if (page < 1) {
+      setPage(1);
+    }
+  }, [page, totalPages]);
+
+  const visibleTasks = filterTasks.slice(
+    (page - 1) * visibleTaskLimit,
+    page * visibleTaskLimit
+  );
 
   return (
     <div className="min-h-screen w-full relative">
@@ -83,15 +124,21 @@ const HomePage = () => {
 
           {/* Danh sách nhiệm vụ */}
           <TaskList
-            filteredTasks={filterTasks}
+            filteredTasks={visibleTasks}
             filter={filter}
             handleTaskChanged={handleTaskChanged}
           />
 
           {/* Phân trang và lọc theo ngày */}
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <TaskListPagination />
-            <DateTimeFilter />
+            <TaskListPagination 
+              handleNext={handleNext}
+              handlePrev={handlePrev}
+              handlePageChange={handlePageChange}
+              page={page}
+              totalPages={totalPages}
+            />
+            <DateTimeFilter dateQuery={dateQuery} setDateQuery={setDateQuery} />
           </div>
 
           {/* Chân trang */}
