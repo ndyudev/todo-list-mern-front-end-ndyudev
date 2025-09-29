@@ -1,4 +1,4 @@
-<h1 align="center">TodoX - Todo List MERN</h1>
+<h1 align="center">Todo List - Todo List MERN</h1>
 
 <p align="center">
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-blue.svg" />
