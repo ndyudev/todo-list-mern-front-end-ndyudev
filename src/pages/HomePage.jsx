@@ -7,8 +7,7 @@ import TaskList from "@/components/TaskList";
 import TaskListPagination from "@/components/TaskListPagination";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import axios from "axios";
-import { use } from "react";
+import api from "@/lib/axios";
 
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
@@ -22,7 +21,7 @@ const HomePage = () => {
   // Logic lấy dữ liệu
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:6971/api/tasks");
+      const res = await api.get("/tasks");
       // const data = Array.isArray(res.data) ? res.data : [];
       setTaskBuffer(res.data.tasks);
       setActiveTaskCount(res.data.activeCount);
@@ -33,13 +32,18 @@ const HomePage = () => {
       // setTaskBuffer([]); // fallback an toàn
     }
   };
+
+  const handleTaskChanged = () => {
+    fetchTasks();
+  };
+
   // Biến lưu danh sách đã lọc
   const filterTasks = taskBuffer.filter((task) => {
     switch (filter) {
       case "active":
         return task.status === "active";
       case "completed":
-        return task.status === "completed";
+        return task.status === "complete";
       default:
         return true;
     }
@@ -67,7 +71,7 @@ const HomePage = () => {
           <Header />
 
           {/* Tạo nhiệm vụ */}
-          <AddTask />
+          <AddTask handleNewTaskAdded={handleTaskChanged} />
 
           {/* Thống kê và Bộ Lọc*/}
           <StatsAndFilters
@@ -78,7 +82,11 @@ const HomePage = () => {
           />
 
           {/* Danh sách nhiệm vụ */}
-          <TaskList filteredTasks={filterTasks} filter={filter}/>
+          <TaskList
+            filteredTasks={filterTasks}
+            filter={filter}
+            handleTaskChanged={handleTaskChanged}
+          />
 
           {/* Phân trang và lọc theo ngày */}
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
