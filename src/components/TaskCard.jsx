@@ -75,7 +75,7 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
         "p-4 bg-gradient-card border-0 shadow-custom-md hover:shadow-custom-lg transition-all duration-200 animate-fade-in group",
         task.status === "complete" && "opacity-75"
       )}
-      style={{ aninationDelay: `${index * 50} ms` }}
+      style={{ animationDelay: `${index * 50} ms` }}
     >
       <div className="flex items-center gap-4">
         {/* Nút tròn */}
